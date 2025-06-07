@@ -105,7 +105,7 @@ Program akan membaca data tersebut dan menghitung total heat transfer.
    - Koefisien 1 di awal dan akhir
    - Koefisien 4 untuk indeks ganjil
    - Koefisien 2 untuk indeks genap (selain akhir)
-5. **Hitung nilai total heat transfer** dengan rumus
+5. **Hitung nilai total heat transfer** dengan rumus `Q'(t) = 10 + 5sin(0.5t) + 2cos(0.3t)`
 
 ---
 
