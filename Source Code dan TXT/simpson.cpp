@@ -27,10 +27,10 @@ public:
      */
     SimpsonsRuleIntegrator(const vector<double> &x, const vector<double> &y)
     {
-        x_values = x;
-        y_values = y;
-        n = x.size() - 1;
-        h = (x_values[n] - x_values[0]) / n;
+        x_values = x;//Menyimpan vektor nilai-nilai pada sumbu-x ke dalam variabel internal class
+        y_values = y;//Menyimpan vektor nilai-nilai pada sumbu-y ke dalam variabel internal class
+        n = x.size() - 1;//Jumlah interval (bukan jumlah titik)
+        h = (x_values[n] - x_values[0]) / n;//menghitung step size
     }
 
     /**
@@ -41,6 +41,7 @@ public:
      * 2. Kalikan 4 pada nilai y pada indeks ganjil
      * 3. Kalikan 2 pada nilai y pada indeks genap (kecuali ujung)
      * 4. Kalikan total dengan h/3
+     * 5. rumus  yang digunakan adalah (h3)[f(x0)+4f(x1)+2f(x2)....]
      */
     double simpsons13Rule()
     {
@@ -75,7 +76,7 @@ public:
      */
     double simpsons38Rule()
     {
-        if (n != 3)
+        if (n != 3)//jika jumlah interval bukan 3
         {
             cout << "Error: Simpson's 3/8 Rule memerlukan tepat 3 interval!" << endl;
             return 0;
@@ -89,35 +90,36 @@ public:
      * Menangani kasus jumlah interval ganjil atau tidak bisa dibagi rata
      * Proses:
      * 1. Gunakan Simpson's 1/3 untuk bagian awal (jika genap)
-     * 2. Gunakan Simpson's 3/8 untuk bagian akhir (jika 3 titik tersisa)
-     * 3. Koreksi dengan mengurangi trapezoidal pada overlap jika perlu
+     * 2. Gunakan Simpson's 3/8 untuk bagian akhir (untuk 3 titik terakhir jika sisa interval ganji)
+     * 3. Koreksi dengan mengurangi trapezoidal pada overlap
      */
     double combinedSimpsonsRule()
     {
-        if (n < 2)
+        if (n < 2)//jumlah interval kurang dari 2
         {
             cout << "Error: Minimal 2 interval diperlukan!" << endl;
             return 0;
         }
 
-        double result = 0;
-        int remaining = n;
-        int start_idx = 0;
+        double result = 0;//untuk menyimpan hasil integrasi
+        int remaining = n;//untuk menyimpan sisa interval
+        int start_idx = 0;//indeks awal integrasi.
 
         // Gunakan Simpson's 1/3 untuk interval genap
-        while (remaining >= 2 && remaining % 2 == 0)
+        while (remaining >= 2 && remaining % 2 == 0)//kalau sisa interval genap
         {
             vector<double> sub_x(x_values.begin() + start_idx, x_values.begin() + start_idx + remaining + 1);
             vector<double> sub_y(y_values.begin() + start_idx, y_values.begin() + start_idx + remaining + 1);
 
-            SimpsonsRuleIntegrator sub_integrator(sub_x, sub_y);
-            result += sub_integrator.simpsons13Rule();
+            SimpsonsRuleIntegrator sub_integrator(sub_x, sub_y);//gunakan class SimpsonsRuleIntegrato menggunakan sub_x dan sub_y
+            result += sub_integrator.simpsons13Rule();//tambahkan hasil integrasi menggunakan Simpson's 1/3
             break;
         }
 
         // Jika masih ada sisa interval ganjil, gunakan Simpson's 3/8 atau Trapezoidal
-        if (remaining % 2 != 0 && remaining >= 3)
+        if (remaining % 2 != 0 && remaining >= 3)//jika sisa interval ganjil dan lebih dari 3 gunakan Simpson's 3/8
         {
+            //Ambil 4 titik terakhir untuk digunakan di Simpson’s 3/8.
             vector<double> sub_x(x_values.end() - 4, x_values.end());
             vector<double> sub_y(y_values.end() - 4, y_values.end());
 
@@ -128,10 +130,10 @@ public:
             vector<double> overlap_y(y_values.end() - 2, y_values.end());
             result -= (overlap_x[1] - overlap_x[0]) * (overlap_y[0] + overlap_y[1]) / 2.0; // Trapezoidal
 
-            result += sub_integrator.simpsons38Rule();
+            result += sub_integrator.simpsons38Rule();//tambahkan hasil integrasi menggunakan Simpson's 3/8
         }
 
-        return result;
+        return result;//kembalikan hasil integrasi
     }
 
     /**
@@ -206,13 +208,13 @@ int main()
         cout << "Masukkan jumlah interval: ";
         cin >> intervals;
 
-        double step = (t_end - t_start) / intervals;
+        double step = (t_end - t_start) / intervals;//jarak antara interval
 
         for (int i = 0; i <= intervals; i++)
         {
             double t = t_start + i * step;
-            x_data.push_back(t);
-            y_data.push_back(heatTransferRate(t));
+            x_data.push_back(t);//memasukan waktu ke dalam x_data
+            y_data.push_back(heatTransferRate(t));//memasukan laju panas ke dalam y_data
         }
         break;
     }
@@ -229,7 +231,7 @@ int main()
          * - Nilai y (hasil dari f(x)) dimasukkan ke dalam vektor y_data.
          * - Data ini kemudian dapat digunakan dalam metode integrasi Simpson.
          */
-        int n;
+        int n;//jumlah titik
         cout << "Masukkan jumlah titik data: ";
         cin >> n;
 
@@ -241,8 +243,8 @@ int main()
             cin >> x;
             cout << "Titik " << i + 1 << " - y: ";
             cin >> y;
-            x_data.push_back(x);
-            y_data.push_back(y);
+            x_data.push_back(x);//memasukan x ke dalam x_data
+            y_data.push_back(y);//memasukan y ke dalam y_data
         }
         break;
     }
@@ -259,24 +261,26 @@ int main()
          * - Data dibaca per baris dalam format: <x> <y>
          * - Setiap nilai x dan y ditambahkan ke dalam vektor x_data dan y_data.
          */
-        string filename;
+        string filename;//nama file yang akan dibaca
         cout << "Masukkan nama file: ";
         cin >> filename;
 
-        ifstream file(filename);
-        if (!file.is_open())
+        ifstream file(filename);//membuka file dengan menggunakan ifstream
+        if (!file.is_open())//jika file tidak dapat dibuka
         {
             cout << "Error: Tidak dapat membuka file!" << endl;
             return 1;
         }
 
-        double x, y;
+        double x, y;//variabel untuk menyimpan nilai x dan y
+
+        //membaca file baris per baris
         while (file >> x >> y)
         {
             x_data.push_back(x);
             y_data.push_back(y);
         }
-        file.close();
+        file.close();//menutup file
         break;
     }
 
@@ -401,17 +405,17 @@ int main()
      * Program akan membuat file output, menuliskan hasil dan data, lalu menutup file.
      * Jika berhasil, pesan konfirmasi akan ditampilkan ke pengguna.
      */
-    if (save == 'y' || save == 'Y')
+    if (save == 'y' || save == 'Y')//Mengecek apakah pengguna ingin menyimpan hasil
     {
-        ofstream output("simpson_result.txt");
+        ofstream output("simpson_result.txt");//Membuat objek ofstream bernama output untuk menulis ke file
         output << "Simpson's Rule Integration Results\n";
         output << "==================================\n";
         output << "Number of intervals: " << n << "\n";
-        output << "Integration result: " << fixed << setprecision(6) << result << "\n";
+        output << "Integration result: " << fixed << setprecision(6) << result << "\n";//menghitung hasil integrasi
 
         output << "\nData points:\n";
         output << "x\t\tf(x)\n";
-        for (size_t i = 0; i < x_data.size(); i++)
+        for (size_t i = 0; i < x_data.size(); i++)//masuk ke dalam loop
         {
             output << x_data[i] << "\t\t" << y_data[i] << "\n";
         }
