@@ -26,7 +26,7 @@ Metode ini memberikan estimasi numerik terhadap integral dari fungsi temperatur 
 #### Rumus Simpson’s 3/8 Rule
 
 ```
-∫[a,b] f(x) dx ≈ (3h / 8) × [f(x₀) + 3f(x₁) + 3f(x₂) + 2f(x₃) + 3f(x₄) + 3f(x₅) + ... + f(xₙ)]
+∫[a,b] f(x) dx ≈ (3h / 8) × [f(x₀) + 3f(x₁) + 3f(x₂) + f(x₃)]
 ```
 
 Metode ini cocok digunakan saat metode Simpson 1/3 tidak bisa digunakan sepenuhnya.
