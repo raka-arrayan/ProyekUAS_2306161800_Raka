@@ -23,6 +23,14 @@ Untuk jumlah interval genap (n), dengan step size `h = (b-a)/n`:
 
 Metode ini memberikan estimasi numerik terhadap integral dari fungsi temperatur terhadap waktu.
 
+#### Rumus Simpson’s 3/8 Rule
+
+```
+∫[a,b] f(x) dx ≈ (3h / 8) × [f(x₀) + 3f(x₁) + 3f(x₂) + 2f(x₃) + 3f(x₄) + 3f(x₅) + ... + f(xₙ)]
+```
+
+Metode ini cocok digunakan saat metode Simpson 1/3 tidak bisa digunakan sepenuhnya.
+
 ---
 
 ## Tujuan Proyek
